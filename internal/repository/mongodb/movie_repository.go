@@ -219,3 +219,34 @@ func (r *MongoDBMovieRepository) SearchMovies(query string, page int, pageSize i
 
 	return movies, nil
 }
+
+func (r *MongoDBMovieRepository) FilterByTags(tags []string, page int, pageSize int) ([]*domain.GetMovieResponse, error) {
+	offset := (page - 1) * pageSize
+
+	filter := bson.M{
+		"tags": bson.M{"$in": tags},
+	}
+
+	options := options.Find().SetSkip(int64(offset)).SetLimit(int64(pageSize))
+
+	cursor, err := r.collection.Find(context.Background(), filter, options)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(context.Background())
+
+	var movies []*domain.GetMovieResponse
+	for cursor.Next(context.Background()) {
+		var movie domain.GetMovieResponse
+		if err := cursor.Decode(&movie); err != nil {
+			return nil, err
+		}
+		movies = append(movies, &movie)
+	}
+
+	if err := cursor.Err(); err != nil {
+		return nil, err
+	}
+
+	return movies, nil
+}

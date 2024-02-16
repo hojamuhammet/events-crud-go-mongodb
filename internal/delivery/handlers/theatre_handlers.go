@@ -133,7 +133,7 @@ func (h *TheatreHandler) UpdatePerformanceHandler(w http.ResponseWriter, r *http
 
 	performance, err := h.TheatreService.UpdatePerformance(objectID, &updatePerformanceRequest)
 	if err != nil {
-		if err.Error() == error.PerformanceNotFound {
+		if err.Error() == "performance not found" {
 			utils.RespondWithErrorJSON(w, status.NotFound, error.PerformanceNotFound)
 		} else {
 			slog.Error("Error deleting performance:", utils.Err(err))

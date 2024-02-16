@@ -38,3 +38,7 @@ func (s *MovieService) DeleteMovie(id primitive.ObjectID) error {
 func (s *MovieService) SearchMovies(query string, page int, pageSize int) ([]*domain.GetMovieResponse, error) {
 	return s.MovieRepository.SearchMovies(query, page, pageSize)
 }
+
+func (s *MovieService) FilterByTags(tags []string, page int, pageSize int) ([]*domain.GetMovieResponse, error) {
+	return s.MovieRepository.FilterByTags(tags, page, pageSize)
+}

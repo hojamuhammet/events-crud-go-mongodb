@@ -13,4 +13,5 @@ type MovieRepository interface {
 	UpdateMovie(id primitive.ObjectID, request *domain.UpdateMovieRequest) (*domain.UpdateMovieResponse, error)
 	DeleteMovie(id primitive.ObjectID) error
 	SearchMovies(query string, page int, pageSize int) ([]*domain.GetMovieResponse, error)
+	FilterByTags(tags []string, page int, pageSize int) ([]*domain.GetMovieResponse, error)
 }

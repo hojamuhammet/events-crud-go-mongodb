@@ -10,4 +10,5 @@ const (
 	InvalidRequestBody   = "Invalid request body"
 	InvalidPage          = "Invalid page"
 	InvalidPageSize      = "Invalid page size"
+	MissingTags          = "Missing tags"
 )

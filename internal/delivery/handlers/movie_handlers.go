@@ -147,10 +147,10 @@ func (h *MovieHandler) UpdateMovieHandler(w http.ResponseWriter, r *http.Request
 	}
 
 	if err != nil {
-		if err.Error() == error.MovieNotFound {
+		if err.Error() == "movie not found" {
 			utils.RespondWithErrorJSON(w, status.NotFound, error.MovieNotFound)
 		} else {
-			slog.Error("Error deleting movie:", utils.Err(err))
+			slog.Error("Error updating movie:", utils.Err(err))
 			utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
 		}
 		return
@@ -225,14 +225,67 @@ func (h *MovieHandler) SearchMoviesHandler(w http.ResponseWriter, r *http.Reques
 		nextPage = nil
 	}
 
-	// Prepare pagination info
 	pagination := map[string]interface{}{
 		"current_page": page,
 		"prev_page":    prevPage,
 		"next_page":    nextPage,
 	}
 
-	// Respond with the retrieved movies and pagination info
+	responseData := map[string]interface{}{
+		"movies":     movies,
+		"pagination": pagination,
+	}
+
+	utils.RespondWithJSON(w, status.OK, responseData)
+}
+
+func (h *MovieHandler) FilterByTagsHandler(w http.ResponseWriter, r *http.Request) {
+	page := 1      // Default page if not provided
+	pageSize := 10 // Default page size, adjust as needed
+	queryTags := r.URL.Query()["tags"]
+
+	pageStr := r.URL.Query().Get("page")
+	if pageStr != "" {
+		pageNum, err := strconv.Atoi(pageStr)
+		if err != nil || pageNum < 1 {
+			utils.RespondWithErrorJSON(w, status.BadRequest, error.InvalidRequestFormat)
+			return
+		}
+		page = pageNum
+	}
+
+	if len(queryTags) == 0 {
+		utils.RespondWithErrorJSON(w, status.BadRequest, error.MissingTags)
+		return
+	}
+
+	movies, err := h.MovieService.FilterByTags(queryTags, page, pageSize)
+	if err != nil {
+		slog.Error("Error filtering movies by tags: ", utils.Err(err))
+		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		return
+	}
+
+	var prevPage interface{}
+	if page > 1 {
+		prevPage = page - 1
+	} else {
+		prevPage = nil // No previous page
+	}
+
+	var nextPage interface{}
+	if len(movies) == pageSize {
+		nextPage = page + 1
+	} else {
+		nextPage = nil
+	}
+
+	pagination := map[string]interface{}{
+		"current_page": page,
+		"prev_page":    prevPage,
+		"next_page":    nextPage,
+	}
+
 	responseData := map[string]interface{}{
 		"movies":     movies,
 		"pagination": pagination,
