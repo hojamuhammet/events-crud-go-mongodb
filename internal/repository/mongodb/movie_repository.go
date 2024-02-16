@@ -223,9 +223,12 @@ func (r *MongoDBMovieRepository) SearchMovies(query string, page int, pageSize i
 func (r *MongoDBMovieRepository) FilterMoviesByTags(tags []string, page int, pageSize int) ([]*domain.GetMovieResponse, error) {
 	offset := (page - 1) * pageSize
 
-	filter := bson.M{
-		"tags": bson.M{"$in": tags},
+	var tagConditions []bson.M
+	for _, tag := range tags {
+		tagConditions = append(tagConditions, bson.M{"tags": tag})
 	}
+
+	filter := bson.M{"$and": tagConditions}
 
 	options := options.Find().SetSkip(int64(offset)).SetLimit(int64(pageSize))
 
