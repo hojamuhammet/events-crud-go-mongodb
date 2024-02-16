@@ -19,5 +19,5 @@ func SetupMovieRouter(movieRouter *chi.Mux, movieService *service.MovieService) 
 	movieRouter.Put("/{id}", movieHandler.UpdateMovieHandler)
 	movieRouter.Delete("/{id}", movieHandler.DeleteMovie)
 	movieRouter.Get("/search", movieHandler.SearchMoviesHandler)
-	movieRouter.Get("/filter", movieHandler.FilterByTagsHandler)
+	movieRouter.Get("/filter", movieHandler.FilterMoviesByTagsHandler)
 }

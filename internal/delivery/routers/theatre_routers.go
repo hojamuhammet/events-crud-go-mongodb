@@ -19,4 +19,5 @@ func SetupTheatreRouter(theatreRouter *chi.Mux, theatreService *service.TheatreS
 	theatreRouter.Put("/{id}", theatreHandler.UpdatePerformanceHandler)
 	theatreRouter.Delete("/{id}", theatreHandler.DeletePerformance)
 	theatreRouter.Get("/search", theatreHandler.SearchPerfomancesHandler)
+	theatreRouter.Get("/filter", theatreHandler.FilterPerformancesByTagsHandler)
 }

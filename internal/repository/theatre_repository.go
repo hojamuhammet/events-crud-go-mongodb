@@ -13,4 +13,5 @@ type TheatreRepository interface {
 	UpdatePerformance(id primitive.ObjectID, request *domain.UpdatePerformanceRequest) (*domain.UpdatePerformanceResponse, error)
 	DeletePerformance(id primitive.ObjectID) error
 	SearchPerformances(query string, page int, pageSize int) ([]*domain.GetPerformanceResponse, error)
+	FilterPerformancesByTags(tags []string, page int, pageSize int) ([]*domain.GetPerformanceResponse, error)
 }

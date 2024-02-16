@@ -207,3 +207,34 @@ func (r *MongoDBTheatreRepository) SearchPerformances(query string, page int, pa
 
 	return performances, nil
 }
+
+func (r *MongoDBTheatreRepository) FilterPerformancesByTags(tags []string, page int, pageSize int) ([]*domain.GetPerformanceResponse, error) {
+	offset := (page - 1) * pageSize
+
+	filter := bson.M{
+		"tags": bson.M{"$in": tags},
+	}
+
+	options := options.Find().SetSkip(int64(offset)).SetLimit(int64(pageSize))
+
+	cursor, err := r.collection.Find(context.Background(), filter, options)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(context.Background())
+
+	var performances []*domain.GetPerformanceResponse
+	for cursor.Next(context.Background()) {
+		var performance domain.GetPerformanceResponse
+		if err := cursor.Decode(&performance); err != nil {
+			return nil, err
+		}
+		performances = append(performances, &performance)
+	}
+
+	if err := cursor.Err(); err != nil {
+		return nil, err
+	}
+
+	return performances, nil
+}

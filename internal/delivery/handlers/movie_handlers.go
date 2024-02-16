@@ -239,7 +239,7 @@ func (h *MovieHandler) SearchMoviesHandler(w http.ResponseWriter, r *http.Reques
 	utils.RespondWithJSON(w, status.OK, responseData)
 }
 
-func (h *MovieHandler) FilterByTagsHandler(w http.ResponseWriter, r *http.Request) {
+func (h *MovieHandler) FilterMoviesByTagsHandler(w http.ResponseWriter, r *http.Request) {
 	page := 1      // Default page if not provided
 	pageSize := 10 // Default page size, adjust as needed
 	queryTags := r.URL.Query()["tags"]
@@ -259,7 +259,7 @@ func (h *MovieHandler) FilterByTagsHandler(w http.ResponseWriter, r *http.Reques
 		return
 	}
 
-	movies, err := h.MovieService.FilterByTags(queryTags, page, pageSize)
+	movies, err := h.MovieService.FilterMoviesByTags(queryTags, page, pageSize)
 	if err != nil {
 		slog.Error("Error filtering movies by tags: ", utils.Err(err))
 		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)

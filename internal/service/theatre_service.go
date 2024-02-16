@@ -38,3 +38,7 @@ func (s *TheatreService) DeletePerformance(id primitive.ObjectID) error {
 func (s *TheatreService) SearchPerformances(query string, page int, pageSize int) ([]*domain.GetPerformanceResponse, error) {
 	return s.TheatreService.SearchPerformances(query, page, pageSize)
 }
+
+func (s *TheatreService) FilterPerformancesByTags(tags []string, page int, pageSize int) ([]*domain.GetPerformanceResponse, error) {
+	return s.TheatreService.FilterPerformancesByTags(tags, page, pageSize)
+}

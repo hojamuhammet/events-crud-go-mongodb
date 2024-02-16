@@ -226,3 +226,58 @@ func (h *TheatreHandler) SearchPerfomancesHandler(w http.ResponseWriter, r *http
 
 	utils.RespondWithJSON(w, status.OK, responseData)
 }
+
+func (h *TheatreHandler) FilterPerformancesByTagsHandler(w http.ResponseWriter, r *http.Request) {
+	page := 1      // Default page if not provided
+	pageSize := 10 // Default page size, adjust as needed
+	queryTags := r.URL.Query()["tags"]
+
+	pageStr := r.URL.Query().Get("page")
+	if pageStr != "" {
+		pageNum, err := strconv.Atoi(pageStr)
+		if err != nil || pageNum < 1 {
+			utils.RespondWithErrorJSON(w, status.BadRequest, error.InvalidRequestFormat)
+			return
+		}
+		page = pageNum
+	}
+
+	if len(queryTags) == 0 {
+		utils.RespondWithErrorJSON(w, status.BadRequest, error.MissingTags)
+		return
+	}
+
+	performances, err := h.TheatreService.FilterPerformancesByTags(queryTags, page, pageSize)
+	if err != nil {
+		slog.Error("Error filtering performances by tags: ", utils.Err(err))
+		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		return
+	}
+
+	var prevPage interface{}
+	if page > 1 {
+		prevPage = page - 1
+	} else {
+		prevPage = nil // No previous page
+	}
+
+	var nextPage interface{}
+	if len(performances) == pageSize {
+		nextPage = page + 1
+	} else {
+		nextPage = nil
+	}
+
+	pagination := map[string]interface{}{
+		"current_page": page,
+		"prev_page":    prevPage,
+		"next_page":    nextPage,
+	}
+
+	responseData := map[string]interface{}{
+		"performances": performances,
+		"pagination":   pagination,
+	}
+
+	utils.RespondWithJSON(w, status.OK, responseData)
+}

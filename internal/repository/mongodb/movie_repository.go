@@ -220,7 +220,7 @@ func (r *MongoDBMovieRepository) SearchMovies(query string, page int, pageSize i
 	return movies, nil
 }
 
-func (r *MongoDBMovieRepository) FilterByTags(tags []string, page int, pageSize int) ([]*domain.GetMovieResponse, error) {
+func (r *MongoDBMovieRepository) FilterMoviesByTags(tags []string, page int, pageSize int) ([]*domain.GetMovieResponse, error) {
 	offset := (page - 1) * pageSize
 
 	filter := bson.M{
