@@ -77,6 +77,7 @@ func (r *MongoDBMovieRepository) CreateMovie(movie *domain.CreateMovieRequest) (
 		Duration:     movie.Duration,
 		ReleaseDate:  movie.ReleaseDate,
 		Age:          movie.Age,
+		Tags:         movie.Tags,
 		Categories:   movie.Categories,
 		Media:        movie.Media,
 	}
@@ -98,54 +99,30 @@ func (r *MongoDBMovieRepository) CreateMovie(movie *domain.CreateMovieRequest) (
 	return &m, nil
 }
 
-func (r *MongoDBMovieRepository) UpdateMovie(id primitive.ObjectID, update *domain.UpdateMovieRequest) (*domain.UpdateMovieResponse, error) {
-	updateFields := bson.M{}
-
-	if update.Cover != "" {
-		updateFields["cover"] = update.Cover
-	}
-	if update.Name != "" {
-		updateFields["name"] = update.Name
-	}
-	if update.OriginalName != "" {
-		updateFields["originalName"] = update.OriginalName
-	}
-	if update.Description != "" {
-		updateFields["description"] = update.Description
-	}
-	if update.Duration != "" {
-		updateFields["duration"] = update.Duration
-	}
-	if !update.ReleaseDate.IsZero() {
-		updateFields["releaseDate"] = update.ReleaseDate
-	}
-	if update.Age != "" {
-		updateFields["age"] = update.Age
-	}
-	if len(update.Categories) > 0 {
-		updateFields["categories"] = update.Categories
-	}
-	if len(update.Tags) > 0 {
-		updateFields["tags"] = update.Tags
-	}
-	if len(update.Media) > 0 {
-		updateFields["media"] = update.Media
+func (r *MongoDBMovieRepository) UpdateMovie(id primitive.ObjectID, movie *domain.UpdateMovieRequest) (*domain.UpdateMovieResponse, error) {
+	update := bson.M{
+		"$set": bson.M{
+			"cover":        movie.Cover,
+			"name":         movie.Name,
+			"originalName": movie.OriginalName,
+			"description":  movie.Description,
+			"duration":     movie.Duration,
+			"releaseDate":  movie.ReleaseDate,
+			"age":          movie.Age,
+			"categories":   movie.Categories,
+			"tags":         movie.Tags,
+			"media":        movie.Media,
+		},
 	}
 
 	filter := bson.M{"_id": id}
 
-	result, err := r.collection.UpdateOne(context.Background(), filter, bson.M{"$set": updateFields})
+	_, err := r.collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
 		slog.Error("error updating movie: ", utils.Err(err))
 		return nil, err
 	}
 
-	if result.ModifiedCount == 0 {
-		slog.Warn("no movie documents were modified")
-		return nil, errors.New("movie not found")
-	}
-
-	// Fetch and return the updated movie
 	updatedMovie, err := r.GetMovieByID(id)
 	if err != nil {
 		slog.Error("error fetching updated movie: ", utils.Err(err))

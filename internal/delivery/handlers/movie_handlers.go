@@ -132,6 +132,17 @@ func (h *MovieHandler) UpdateMovieHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
+	existingMovie, err := h.MovieService.GetMovieByID(objectID)
+	if err != nil {
+		slog.Error("Error checking if movie exists: ", utils.Err(err))
+		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		return
+	}
+	if existingMovie == nil {
+		utils.RespondWithErrorJSON(w, status.NotFound, error.MovieNotFound)
+		return
+	}
+
 	var updateMovieRequest domain.UpdateMovieRequest
 	err = json.NewDecoder(r.Body).Decode(&updateMovieRequest)
 	if err != nil {
@@ -147,10 +158,10 @@ func (h *MovieHandler) UpdateMovieHandler(w http.ResponseWriter, r *http.Request
 	}
 
 	if err != nil {
+		slog.Error("Error updating movie: ", utils.Err(err))
 		if err.Error() == "movie not found" {
 			utils.RespondWithErrorJSON(w, status.NotFound, error.MovieNotFound)
 		} else {
-			slog.Error("Error updating movie:", utils.Err(err))
 			utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
 		}
 		return
