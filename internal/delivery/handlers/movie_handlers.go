@@ -153,12 +153,6 @@ func (h *MovieHandler) UpdateMovieHandler(w http.ResponseWriter, r *http.Request
 	movie, err := h.MovieService.UpdateMovie(objectID, &updateMovieRequest)
 	if err != nil {
 		slog.Error("Error updating movie: ", utils.Err(err))
-		utils.RespondWithErrorJSON(w, status.InternalServerError, fmt.Sprintf("Error updating movie: %v", err))
-		return
-	}
-
-	if err != nil {
-		slog.Error("Error updating movie: ", utils.Err(err))
 		if err.Error() == "movie not found" {
 			utils.RespondWithErrorJSON(w, status.NotFound, error.MovieNotFound)
 		} else {

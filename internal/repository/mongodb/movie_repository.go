@@ -99,25 +99,25 @@ func (r *MongoDBMovieRepository) CreateMovie(movie *domain.CreateMovieRequest) (
 	return &m, nil
 }
 
-func (r *MongoDBMovieRepository) UpdateMovie(id primitive.ObjectID, movie *domain.UpdateMovieRequest) (*domain.UpdateMovieResponse, error) {
-	update := bson.M{
+func (r *MongoDBMovieRepository) UpdateMovie(id primitive.ObjectID, update *domain.UpdateMovieRequest) (*domain.UpdateMovieResponse, error) {
+	updateFields := bson.M{
 		"$set": bson.M{
-			"cover":        movie.Cover,
-			"name":         movie.Name,
-			"originalName": movie.OriginalName,
-			"description":  movie.Description,
-			"duration":     movie.Duration,
-			"releaseDate":  movie.ReleaseDate,
-			"age":          movie.Age,
-			"categories":   movie.Categories,
-			"tags":         movie.Tags,
-			"media":        movie.Media,
+			"cover":        update.Cover,
+			"name":         update.Name,
+			"originalName": update.OriginalName,
+			"description":  update.Description,
+			"duration":     update.Duration,
+			"releaseDate":  update.ReleaseDate,
+			"age":          update.Age,
+			"categories":   update.Categories,
+			"tags":         update.Tags,
+			"media":        update.Media,
 		},
 	}
 
 	filter := bson.M{"_id": id}
 
-	_, err := r.collection.UpdateOne(context.Background(), filter, update)
+	_, err := r.collection.UpdateOne(context.Background(), filter, updateFields)
 	if err != nil {
 		slog.Error("error updating movie: ", utils.Err(err))
 		return nil, err

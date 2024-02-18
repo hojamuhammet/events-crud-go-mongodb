@@ -136,7 +136,6 @@ func (h *TheatreHandler) UpdatePerformanceHandler(w http.ResponseWriter, r *http
 		if err.Error() == "performance not found" {
 			utils.RespondWithErrorJSON(w, status.NotFound, error.PerformanceNotFound)
 		} else {
-			slog.Error("Error deleting performance:", utils.Err(err))
 			utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
 		}
 		return
@@ -211,14 +210,12 @@ func (h *TheatreHandler) SearchPerfomancesHandler(w http.ResponseWriter, r *http
 		nextPage = nil
 	}
 
-	// Prepare pagination info
 	pagination := map[string]interface{}{
 		"current_page": page,
 		"prev_page":    prevPage,
 		"next_page":    nextPage,
 	}
 
-	// Respond with the retrieved movies and pagination info
 	responseData := map[string]interface{}{
 		"movies":     movies,
 		"pagination": pagination,

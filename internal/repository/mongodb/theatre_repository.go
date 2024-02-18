@@ -98,43 +98,25 @@ func (r *MongoDBTheatreRepository) CreatePerformance(theatre *domain.CreatePerfo
 }
 
 func (r *MongoDBTheatreRepository) UpdatePerformance(id primitive.ObjectID, update *domain.UpdatePerformanceRequest) (*domain.UpdatePerformanceResponse, error) {
-	updateFields := bson.M{}
+	updateFields := bson.M{
+		"$set": bson.M{
+			"cover":       update.Cover,
+			"name":        update.Name,
+			"description": update.Description,
+			"duration":    update.Duration,
+			"age":         update.Age,
+			"categories":  update.Categories,
+			"tags":        update.Tags,
+			"media":       update.Media,
+		},
+	}
 
-	if update.Cover != "" {
-		updateFields["cover"] = update.Cover
-	}
-	if update.Name != "" {
-		updateFields["name"] = update.Name
-	}
-	if update.Description != "" {
-		updateFields["description"] = update.Description
-	}
-	if update.Duration != "" {
-		updateFields["duration"] = update.Duration
-	}
-	if update.Age != "" {
-		updateFields["age"] = update.Age
-	}
-	if len(update.Categories) > 0 {
-		updateFields["categories"] = update.Categories
-	}
-	if len(update.Tags) > 0 {
-		updateFields["tags"] = update.Tags
-	}
-	if len(update.Media) > 0 {
-		updateFields["media"] = update.Media
-	}
 	filter := bson.M{"_id": id}
 
-	result, err := r.collection.UpdateOne(context.Background(), filter, bson.M{"$set": updateFields})
+	_, err := r.collection.UpdateOne(context.Background(), filter, updateFields)
 	if err != nil {
 		slog.Error("error updating performance: ", utils.Err(err))
 		return nil, err
-	}
-
-	if result.ModifiedCount == 0 {
-		slog.Warn("No performance document were modified")
-		return nil, errors.New("performance not found")
 	}
 
 	updatePerformance, err := r.GetPerformanceByID(id)
