@@ -9,6 +9,7 @@ import (
 	"events/pkg/lib/utils"
 	"fmt"
 	"log/slog"
+	"math"
 	"net/http"
 	"strconv"
 
@@ -40,6 +41,15 @@ func (h *MovieHandler) GetAllMoviesHandler(w http.ResponseWriter, r *http.Reques
 		page = pageNum
 	}
 
+	totalMovies, err := h.MovieService.GetTotalMoviesCount()
+	if err != nil {
+		slog.Error("Error getting total movies count: ", utils.Err(err))
+		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		return
+	}
+
+	totalPages := int(math.Ceil(float64(totalMovies) / float64(pageSize)))
+
 	movies, err := h.MovieService.GetAllMovies(page, pageSize)
 	if err != nil {
 		slog.Error("Error getting movies: ", utils.Err(err))
@@ -51,7 +61,7 @@ func (h *MovieHandler) GetAllMoviesHandler(w http.ResponseWriter, r *http.Reques
 	if page > 1 {
 		prevPage = page - 1
 	} else {
-		prevPage = nil // No previous page
+		prevPage = nil
 	}
 
 	var nextPage interface{}
@@ -61,14 +71,28 @@ func (h *MovieHandler) GetAllMoviesHandler(w http.ResponseWriter, r *http.Reques
 		nextPage = nil
 	}
 
-	// Prepare pagination info
+	var firstPage interface{}
+	if totalPages > 0 {
+		firstPage = 1
+	} else {
+		firstPage = nil
+	}
+
+	var lastPage interface{}
+	if totalPages >= 1 {
+		lastPage = totalPages
+	} else {
+		lastPage = firstPage
+	}
+
 	pagination := map[string]interface{}{
 		"current_page": page,
 		"prev_page":    prevPage,
 		"next_page":    nextPage,
+		"first_page":   firstPage,
+		"last_page":    lastPage,
 	}
 
-	// Respond with the retrieved movies and pagination info
 	responseData := map[string]interface{}{
 		"movies":     movies,
 		"pagination": pagination,
@@ -77,7 +101,7 @@ func (h *MovieHandler) GetAllMoviesHandler(w http.ResponseWriter, r *http.Reques
 	utils.RespondWithJSON(w, status.OK, responseData)
 }
 
-func (h *MovieHandler) GetMovieHandler(w http.ResponseWriter, r *http.Request) {
+func (h *MovieHandler) GetMovieByIDHandler(w http.ResponseWriter, r *http.Request) {
 	movieID := chi.URLParam(r, "id")
 
 	objectID, err := primitive.ObjectIDFromHex(movieID)
@@ -207,6 +231,15 @@ func (h *MovieHandler) SearchMoviesHandler(w http.ResponseWriter, r *http.Reques
 		page = pageNum
 	}
 
+	totalMovies, err := h.MovieService.GetTotalMoviesCount()
+	if err != nil {
+		slog.Error("Error getting total movies count: ", utils.Err(err))
+		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		return
+	}
+
+	totalPages := int(math.Ceil(float64(totalMovies) / float64(pageSize)))
+
 	query := r.URL.Query().Get("query")
 
 	movies, err := h.MovieService.SearchMovies(query, page, pageSize)
@@ -220,7 +253,7 @@ func (h *MovieHandler) SearchMoviesHandler(w http.ResponseWriter, r *http.Reques
 	if page > 1 {
 		prevPage = page - 1
 	} else {
-		prevPage = nil // No previous page
+		prevPage = nil
 	}
 
 	var nextPage interface{}
@@ -230,10 +263,26 @@ func (h *MovieHandler) SearchMoviesHandler(w http.ResponseWriter, r *http.Reques
 		nextPage = nil
 	}
 
+	var firstPage interface{}
+	if totalPages > 0 {
+		firstPage = 1
+	} else {
+		firstPage = nil
+	}
+
+	var lastPage interface{}
+	if totalPages >= 1 {
+		lastPage = totalPages
+	} else {
+		lastPage = firstPage
+	}
+
 	pagination := map[string]interface{}{
 		"current_page": page,
 		"prev_page":    prevPage,
 		"next_page":    nextPage,
+		"first_page":   firstPage,
+		"last_page":    lastPage,
 	}
 
 	responseData := map[string]interface{}{
@@ -259,6 +308,15 @@ func (h *MovieHandler) FilterMoviesByTagsHandler(w http.ResponseWriter, r *http.
 		page = pageNum
 	}
 
+	totalMovies, err := h.MovieService.GetTotalMoviesCount()
+	if err != nil {
+		slog.Error("Error getting total movies count: ", utils.Err(err))
+		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		return
+	}
+
+	totalPages := int(math.Ceil(float64(totalMovies) / float64(pageSize)))
+
 	if len(queryTags) == 0 {
 		utils.RespondWithErrorJSON(w, status.BadRequest, error.MissingTags)
 		return
@@ -275,7 +333,7 @@ func (h *MovieHandler) FilterMoviesByTagsHandler(w http.ResponseWriter, r *http.
 	if page > 1 {
 		prevPage = page - 1
 	} else {
-		prevPage = nil // No previous page
+		prevPage = nil
 	}
 
 	var nextPage interface{}
@@ -285,10 +343,26 @@ func (h *MovieHandler) FilterMoviesByTagsHandler(w http.ResponseWriter, r *http.
 		nextPage = nil
 	}
 
+	var firstPage interface{}
+	if totalPages > 0 {
+		firstPage = 1
+	} else {
+		firstPage = nil
+	}
+
+	var lastPage interface{}
+	if totalPages >= 1 {
+		lastPage = totalPages
+	} else {
+		lastPage = firstPage
+	}
+
 	pagination := map[string]interface{}{
 		"current_page": page,
 		"prev_page":    prevPage,
 		"next_page":    nextPage,
+		"first_page":   firstPage,
+		"last_page":    lastPage,
 	}
 
 	responseData := map[string]interface{}{

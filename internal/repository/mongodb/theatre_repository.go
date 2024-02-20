@@ -52,6 +52,17 @@ func (r *MongoDBTheatreRepository) GetAllPerformances(page, pageSize int) ([]*do
 	return performances, nil
 }
 
+func (r *MongoDBTheatreRepository) GetTotalPerformancesCount() (int, error) {
+	filter := bson.M{}
+
+	totalPerformances, err := r.collection.CountDocuments(context.Background(), filter)
+	if err != nil {
+		slog.Error("error getting total performances count", utils.Err(err))
+		return 0, err
+	}
+	return int(totalPerformances), nil
+}
+
 func (r *MongoDBTheatreRepository) GetPerformanceByID(id primitive.ObjectID) (*domain.GetPerformanceResponse, error) {
 	filter := bson.M{"_id": id}
 

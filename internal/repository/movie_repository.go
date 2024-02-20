@@ -8,6 +8,7 @@ import (
 
 type MovieRepository interface {
 	GetAllMovies(page, pageSize int) ([]*domain.GetMovieResponse, error)
+	GetTotalMoviesCount() (int, error)
 	GetMovieByID(id primitive.ObjectID) (*domain.GetMovieResponse, error)
 	CreateMovie(request *domain.CreateMovieRequest) (*domain.CreateMovieResponse, error)
 	UpdateMovie(id primitive.ObjectID, request *domain.UpdateMovieRequest) (*domain.UpdateMovieResponse, error)

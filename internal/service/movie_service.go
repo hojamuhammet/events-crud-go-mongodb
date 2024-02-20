@@ -19,6 +19,10 @@ func (s *MovieService) GetAllMovies(page, pageSize int) ([]*domain.GetMovieRespo
 	return s.MovieRepository.GetAllMovies(page, pageSize)
 }
 
+func (s *MovieService) GetTotalMoviesCount() (int, error) {
+	return s.MovieRepository.GetTotalMoviesCount()
+}
+
 func (s *MovieService) GetMovieByID(id primitive.ObjectID) (*domain.GetMovieResponse, error) {
 	return s.MovieRepository.GetMovieByID(id)
 }

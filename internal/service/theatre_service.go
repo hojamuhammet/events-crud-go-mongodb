@@ -19,6 +19,10 @@ func (s *TheatreService) GetAllPerformances(page, pageSize int) ([]*domain.GetPe
 	return s.TheatreService.GetAllPerformances(page, pageSize)
 }
 
+func (s *TheatreService) GetTotalPerformancesCount() (int, error) {
+	return s.TheatreService.GetTotalPerformancesCount()
+}
+
 func (s *TheatreService) GetPerformanceByID(id primitive.ObjectID) (*domain.GetPerformanceResponse, error) {
 	return s.TheatreService.GetPerformanceByID(id)
 }

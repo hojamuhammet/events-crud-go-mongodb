@@ -9,6 +9,7 @@ import (
 	"events/pkg/lib/utils"
 	"fmt"
 	"log/slog"
+	"math"
 	"net/http"
 	"strconv"
 
@@ -35,6 +36,15 @@ func (h *TheatreHandler) GetAllPerformances(w http.ResponseWriter, r *http.Reque
 		page = pageNum
 	}
 
+	totalPerformances, err := h.TheatreService.GetTotalPerformancesCount()
+	if err != nil {
+		slog.Error("Error getting total performances count: ", utils.Err(err))
+		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		return
+	}
+
+	totalPages := int(math.Ceil(float64(totalPerformances) / float64(pageSize)))
+
 	performances, err := h.TheatreService.GetAllPerformances(page, pageSize)
 	if err != nil {
 		slog.Error("Error getting performances: ", utils.Err(err))
@@ -46,7 +56,7 @@ func (h *TheatreHandler) GetAllPerformances(w http.ResponseWriter, r *http.Reque
 	if page > 1 {
 		prevPage = page - 1
 	} else {
-		prevPage = nil // No previous page
+		prevPage = nil
 	}
 
 	var nextPage interface{}
@@ -56,10 +66,26 @@ func (h *TheatreHandler) GetAllPerformances(w http.ResponseWriter, r *http.Reque
 		nextPage = nil
 	}
 
+	var firstPage interface{}
+	if totalPages > 0 {
+		firstPage = 1
+	} else {
+		firstPage = nil
+	}
+
+	var lastPage interface{}
+	if totalPages >= 1 {
+		lastPage = totalPages
+	} else {
+		lastPage = firstPage
+	}
+
 	pagination := map[string]interface{}{
 		"current_page": page,
 		"prev_page":    prevPage,
 		"next_page":    nextPage,
+		"first_page":   firstPage,
+		"last_page":    lastPage,
 	}
 
 	responseData := map[string]interface{}{
@@ -187,6 +213,15 @@ func (h *TheatreHandler) SearchPerfomancesHandler(w http.ResponseWriter, r *http
 		page = pageNum
 	}
 
+	totalPerformances, err := h.TheatreService.GetTotalPerformancesCount()
+	if err != nil {
+		slog.Error("Error getting total performances count: ", utils.Err(err))
+		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		return
+	}
+
+	totalPages := int(math.Ceil(float64(totalPerformances) / float64(pageSize)))
+
 	query := r.URL.Query().Get("query")
 
 	movies, err := h.TheatreService.SearchPerformances(query, page, pageSize)
@@ -200,7 +235,7 @@ func (h *TheatreHandler) SearchPerfomancesHandler(w http.ResponseWriter, r *http
 	if page > 1 {
 		prevPage = page - 1
 	} else {
-		prevPage = nil // No previous page
+		prevPage = nil
 	}
 
 	var nextPage interface{}
@@ -210,10 +245,26 @@ func (h *TheatreHandler) SearchPerfomancesHandler(w http.ResponseWriter, r *http
 		nextPage = nil
 	}
 
+	var firstPage interface{}
+	if totalPages > 0 {
+		firstPage = 1
+	} else {
+		firstPage = nil
+	}
+
+	var lastPage interface{}
+	if totalPages >= 1 {
+		lastPage = totalPages
+	} else {
+		lastPage = firstPage
+	}
+
 	pagination := map[string]interface{}{
 		"current_page": page,
 		"prev_page":    prevPage,
 		"next_page":    nextPage,
+		"first_page":   firstPage,
+		"last_page":    lastPage,
 	}
 
 	responseData := map[string]interface{}{
@@ -239,6 +290,15 @@ func (h *TheatreHandler) FilterPerformancesByTagsHandler(w http.ResponseWriter, 
 		page = pageNum
 	}
 
+	totalPerformances, err := h.TheatreService.GetTotalPerformancesCount()
+	if err != nil {
+		slog.Error("Error getting total performances count: ", utils.Err(err))
+		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		return
+	}
+
+	totalPages := int(math.Ceil(float64(totalPerformances) / float64(pageSize)))
+
 	if len(queryTags) == 0 {
 		utils.RespondWithErrorJSON(w, status.BadRequest, error.MissingTags)
 		return
@@ -255,7 +315,7 @@ func (h *TheatreHandler) FilterPerformancesByTagsHandler(w http.ResponseWriter, 
 	if page > 1 {
 		prevPage = page - 1
 	} else {
-		prevPage = nil // No previous page
+		prevPage = nil
 	}
 
 	var nextPage interface{}
@@ -265,10 +325,26 @@ func (h *TheatreHandler) FilterPerformancesByTagsHandler(w http.ResponseWriter, 
 		nextPage = nil
 	}
 
+	var firstPage interface{}
+	if totalPages > 0 {
+		firstPage = 1
+	} else {
+		firstPage = nil
+	}
+
+	var lastPage interface{}
+	if totalPages >= 1 {
+		lastPage = totalPages
+	} else {
+		lastPage = firstPage
+	}
+
 	pagination := map[string]interface{}{
 		"current_page": page,
 		"prev_page":    prevPage,
 		"next_page":    nextPage,
+		"first_page":   firstPage,
+		"last_page":    lastPage,
 	}
 
 	responseData := map[string]interface{}{

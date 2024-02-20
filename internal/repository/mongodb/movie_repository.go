@@ -52,6 +52,18 @@ func (r *MongoDBMovieRepository) GetAllMovies(page, pageSize int) ([]*domain.Get
 	return movies, nil
 }
 
+func (r *MongoDBMovieRepository) GetTotalMoviesCount() (int, error) {
+	filter := bson.M{}
+
+	totalMovies, err := r.collection.CountDocuments(context.Background(), filter)
+	if err != nil {
+		slog.Error("error getting total movies count", utils.Err(err))
+		return 0, err
+	}
+
+	return int(totalMovies), nil
+}
+
 func (r *MongoDBMovieRepository) GetMovieByID(id primitive.ObjectID) (*domain.GetMovieResponse, error) {
 	filter := bson.M{"_id": id}
 
