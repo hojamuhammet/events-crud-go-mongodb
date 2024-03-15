@@ -1,4 +1,4 @@
-package error
+package errs
 
 const (
 	InvalidRequestFormat = "Invalid request format"

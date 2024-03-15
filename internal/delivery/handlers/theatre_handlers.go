@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"events/internal/domain"
 	"events/internal/service"
-	"events/pkg/lib/error"
+	"events/pkg/lib/errs"
 	"events/pkg/lib/status"
 	"events/pkg/lib/utils"
 	"fmt"
@@ -30,7 +30,7 @@ func (h *TheatreHandler) GetAllPerformances(w http.ResponseWriter, r *http.Reque
 	if pageStr != "" {
 		pageNum, err := strconv.Atoi(pageStr)
 		if err != nil || pageNum < 1 {
-			utils.RespondWithErrorJSON(w, status.BadRequest, error.InvalidRequestFormat)
+			utils.RespondWithErrorJSON(w, status.BadRequest, errs.InvalidRequestFormat)
 			return
 		}
 		page = pageNum
@@ -39,7 +39,7 @@ func (h *TheatreHandler) GetAllPerformances(w http.ResponseWriter, r *http.Reque
 	totalPerformances, err := h.TheatreService.GetTotalPerformancesCount()
 	if err != nil {
 		slog.Error("Error getting total performances count: ", utils.Err(err))
-		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		utils.RespondWithErrorJSON(w, status.InternalServerError, errs.InternalServerError)
 		return
 	}
 
@@ -48,7 +48,7 @@ func (h *TheatreHandler) GetAllPerformances(w http.ResponseWriter, r *http.Reque
 	performances, err := h.TheatreService.GetAllPerformances(page, pageSize)
 	if err != nil {
 		slog.Error("Error getting performances: ", utils.Err(err))
-		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		utils.RespondWithErrorJSON(w, status.InternalServerError, errs.InternalServerError)
 		return
 	}
 
@@ -102,19 +102,19 @@ func (h *TheatreHandler) GetPerformanceByID(w http.ResponseWriter, r *http.Reque
 	objectID, err := primitive.ObjectIDFromHex(movieID)
 	if err != nil {
 		slog.Error("Invalid performance ID: ", utils.Err(err))
-		utils.RespondWithErrorJSON(w, status.BadRequest, error.InvalidPerformanceID)
+		utils.RespondWithErrorJSON(w, status.BadRequest, errs.InvalidPerformanceID)
 		return
 	}
 
 	performance, err := h.TheatreService.TheatreService.GetPerformanceByID(objectID)
 	if err != nil {
 		slog.Error("Error getting performance by ID: ", utils.Err(err))
-		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		utils.RespondWithErrorJSON(w, status.InternalServerError, errs.InternalServerError)
 		return
 	}
 
 	if performance == nil {
-		utils.RespondWithErrorJSON(w, status.NotFound, error.PerformanceNotFound)
+		utils.RespondWithErrorJSON(w, status.NotFound, errs.PerformanceNotFound)
 	}
 
 	utils.RespondWithJSON(w, status.OK, performance)
@@ -124,7 +124,7 @@ func (h *TheatreHandler) CreatePerformanceHandler(w http.ResponseWriter, r *http
 	var createMovieRequest domain.CreatePerformanceRequest
 	err := json.NewDecoder(r.Body).Decode(&createMovieRequest)
 	if err != nil {
-		utils.RespondWithErrorJSON(w, status.BadRequest, error.InvalidRequestBody)
+		utils.RespondWithErrorJSON(w, status.BadRequest, errs.InvalidRequestBody)
 		return
 	}
 
@@ -146,23 +146,23 @@ func (h *TheatreHandler) UpdatePerformanceHandler(w http.ResponseWriter, r *http
 	objectID, err := primitive.ObjectIDFromHex(movieID)
 	if err != nil {
 		slog.Error("Invalid performance ID: ", utils.Err(err))
-		utils.RespondWithErrorJSON(w, status.BadRequest, error.InvalidPerformanceID)
+		utils.RespondWithErrorJSON(w, status.BadRequest, errs.InvalidPerformanceID)
 		return
 	}
 
 	var updatePerformanceRequest domain.UpdatePerformanceRequest
 	err = json.NewDecoder(r.Body).Decode(&updatePerformanceRequest)
 	if err != nil {
-		utils.RespondWithErrorJSON(w, status.BadRequest, error.InvalidRequestBody)
+		utils.RespondWithErrorJSON(w, status.BadRequest, errs.InvalidRequestBody)
 		return
 	}
 
 	performance, err := h.TheatreService.UpdatePerformance(objectID, &updatePerformanceRequest)
 	if err != nil {
 		if err.Error() == "performance not found" {
-			utils.RespondWithErrorJSON(w, status.NotFound, error.PerformanceNotFound)
+			utils.RespondWithErrorJSON(w, status.NotFound, errs.PerformanceNotFound)
 		} else {
-			utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+			utils.RespondWithErrorJSON(w, status.InternalServerError, errs.InternalServerError)
 		}
 		return
 	}
@@ -176,17 +176,17 @@ func (h *TheatreHandler) DeletePerformance(w http.ResponseWriter, r *http.Reques
 	objectID, err := primitive.ObjectIDFromHex(movieID)
 	if err != nil {
 		slog.Error("Invalid performance ID: ", utils.Err(err))
-		utils.RespondWithErrorJSON(w, status.BadRequest, error.InvalidPerformanceID)
+		utils.RespondWithErrorJSON(w, status.BadRequest, errs.InvalidPerformanceID)
 		return
 	}
 
 	err = h.TheatreService.DeletePerformance(objectID)
 	if err != nil {
 		if err.Error() == "performance not found" {
-			utils.RespondWithErrorJSON(w, status.NotFound, error.PerformanceNotFound)
+			utils.RespondWithErrorJSON(w, status.NotFound, errs.PerformanceNotFound)
 		} else {
 			slog.Error("Error deleting performance:", utils.Err(err))
-			utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+			utils.RespondWithErrorJSON(w, status.InternalServerError, errs.InternalServerError)
 		}
 		return
 	}
@@ -207,7 +207,7 @@ func (h *TheatreHandler) SearchPerfomancesHandler(w http.ResponseWriter, r *http
 	if pageStr != "" {
 		pageNum, err := strconv.Atoi(pageStr)
 		if err != nil || pageNum < 1 {
-			utils.RespondWithErrorJSON(w, status.BadRequest, error.InvalidRequestFormat)
+			utils.RespondWithErrorJSON(w, status.BadRequest, errs.InvalidRequestFormat)
 			return
 		}
 		page = pageNum
@@ -216,7 +216,7 @@ func (h *TheatreHandler) SearchPerfomancesHandler(w http.ResponseWriter, r *http
 	totalPerformances, err := h.TheatreService.GetTotalPerformancesCount()
 	if err != nil {
 		slog.Error("Error getting total performances count: ", utils.Err(err))
-		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		utils.RespondWithErrorJSON(w, status.InternalServerError, errs.InternalServerError)
 		return
 	}
 
@@ -227,7 +227,7 @@ func (h *TheatreHandler) SearchPerfomancesHandler(w http.ResponseWriter, r *http
 	movies, err := h.TheatreService.SearchPerformances(query, page, pageSize)
 	if err != nil {
 		slog.Error("Error searching movies: ", utils.Err(err))
-		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		utils.RespondWithErrorJSON(w, status.InternalServerError, errs.InternalServerError)
 		return
 	}
 
@@ -284,7 +284,7 @@ func (h *TheatreHandler) FilterPerformancesByTagsHandler(w http.ResponseWriter, 
 	if pageStr != "" {
 		pageNum, err := strconv.Atoi(pageStr)
 		if err != nil || pageNum < 1 {
-			utils.RespondWithErrorJSON(w, status.BadRequest, error.InvalidRequestFormat)
+			utils.RespondWithErrorJSON(w, status.BadRequest, errs.InvalidRequestFormat)
 			return
 		}
 		page = pageNum
@@ -293,21 +293,21 @@ func (h *TheatreHandler) FilterPerformancesByTagsHandler(w http.ResponseWriter, 
 	totalPerformances, err := h.TheatreService.GetTotalPerformancesCount()
 	if err != nil {
 		slog.Error("Error getting total performances count: ", utils.Err(err))
-		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		utils.RespondWithErrorJSON(w, status.InternalServerError, errs.InternalServerError)
 		return
 	}
 
 	totalPages := int(math.Ceil(float64(totalPerformances) / float64(pageSize)))
 
 	if len(queryTags) == 0 {
-		utils.RespondWithErrorJSON(w, status.BadRequest, error.MissingTags)
+		utils.RespondWithErrorJSON(w, status.BadRequest, errs.MissingTags)
 		return
 	}
 
 	performances, err := h.TheatreService.FilterPerformancesByTags(queryTags, page, pageSize)
 	if err != nil {
 		slog.Error("Error filtering performances by tags: ", utils.Err(err))
-		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		utils.RespondWithErrorJSON(w, status.InternalServerError, errs.InternalServerError)
 		return
 	}
 

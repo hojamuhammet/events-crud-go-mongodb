@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"events/internal/domain"
 	"events/internal/service"
-	"events/pkg/lib/error"
+	"events/pkg/lib/errs"
 	"events/pkg/lib/status"
 	"events/pkg/lib/utils"
 	"fmt"
@@ -35,7 +35,7 @@ func (h *MovieHandler) GetAllMoviesHandler(w http.ResponseWriter, r *http.Reques
 	if pageStr != "" {
 		pageNum, err := strconv.Atoi(pageStr)
 		if err != nil || pageNum < 1 {
-			utils.RespondWithErrorJSON(w, status.BadRequest, error.InvalidRequestFormat)
+			utils.RespondWithErrorJSON(w, status.BadRequest, errs.InvalidRequestFormat)
 			return
 		}
 		page = pageNum
@@ -44,7 +44,7 @@ func (h *MovieHandler) GetAllMoviesHandler(w http.ResponseWriter, r *http.Reques
 	totalMovies, err := h.MovieService.GetTotalMoviesCount()
 	if err != nil {
 		slog.Error("Error getting total movies count: ", utils.Err(err))
-		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		utils.RespondWithErrorJSON(w, status.InternalServerError, errs.InternalServerError)
 		return
 	}
 
@@ -53,7 +53,7 @@ func (h *MovieHandler) GetAllMoviesHandler(w http.ResponseWriter, r *http.Reques
 	movies, err := h.MovieService.GetAllMovies(page, pageSize)
 	if err != nil {
 		slog.Error("Error getting movies: ", utils.Err(err))
-		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		utils.RespondWithErrorJSON(w, status.InternalServerError, errs.InternalServerError)
 		return
 	}
 
@@ -107,19 +107,19 @@ func (h *MovieHandler) GetMovieByIDHandler(w http.ResponseWriter, r *http.Reques
 	objectID, err := primitive.ObjectIDFromHex(movieID)
 	if err != nil {
 		slog.Error("Invalid movie ID: ", utils.Err(err))
-		utils.RespondWithErrorJSON(w, status.BadRequest, error.InvalidMovieID)
+		utils.RespondWithErrorJSON(w, status.BadRequest, errs.InvalidMovieID)
 		return
 	}
 
 	movie, err := h.MovieService.GetMovieByID(objectID)
 	if err != nil {
 		slog.Error("Error getting movie by ID: ", utils.Err(err))
-		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		utils.RespondWithErrorJSON(w, status.InternalServerError, errs.InternalServerError)
 		return
 	}
 
 	if movie == nil {
-		utils.RespondWithErrorJSON(w, status.NotFound, error.MovieNotFound)
+		utils.RespondWithErrorJSON(w, status.NotFound, errs.MovieNotFound)
 		return
 	}
 
@@ -130,7 +130,7 @@ func (h *MovieHandler) CreateMovieHandler(w http.ResponseWriter, r *http.Request
 	var createMovieRequest domain.CreateMovieRequest
 	err := json.NewDecoder(r.Body).Decode(&createMovieRequest)
 	if err != nil {
-		utils.RespondWithErrorJSON(w, status.BadRequest, error.InvalidRequestBody)
+		utils.RespondWithErrorJSON(w, status.BadRequest, errs.InvalidRequestBody)
 		return
 	}
 
@@ -152,25 +152,25 @@ func (h *MovieHandler) UpdateMovieHandler(w http.ResponseWriter, r *http.Request
 	objectID, err := primitive.ObjectIDFromHex(movieID)
 	if err != nil {
 		slog.Error("Invalid movie ID: ", utils.Err(err))
-		utils.RespondWithErrorJSON(w, status.BadRequest, error.InvalidMovieID)
+		utils.RespondWithErrorJSON(w, status.BadRequest, errs.InvalidMovieID)
 		return
 	}
 
 	existingMovie, err := h.MovieService.GetMovieByID(objectID)
 	if err != nil {
 		slog.Error("Error checking if movie exists: ", utils.Err(err))
-		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		utils.RespondWithErrorJSON(w, status.InternalServerError, errs.InternalServerError)
 		return
 	}
 	if existingMovie == nil {
-		utils.RespondWithErrorJSON(w, status.NotFound, error.MovieNotFound)
+		utils.RespondWithErrorJSON(w, status.NotFound, errs.MovieNotFound)
 		return
 	}
 
 	var updateMovieRequest domain.UpdateMovieRequest
 	err = json.NewDecoder(r.Body).Decode(&updateMovieRequest)
 	if err != nil {
-		utils.RespondWithErrorJSON(w, status.BadRequest, error.InvalidRequestBody)
+		utils.RespondWithErrorJSON(w, status.BadRequest, errs.InvalidRequestBody)
 		return
 	}
 
@@ -178,9 +178,9 @@ func (h *MovieHandler) UpdateMovieHandler(w http.ResponseWriter, r *http.Request
 	if err != nil {
 		slog.Error("Error updating movie: ", utils.Err(err))
 		if err.Error() == "movie not found" {
-			utils.RespondWithErrorJSON(w, status.NotFound, error.MovieNotFound)
+			utils.RespondWithErrorJSON(w, status.NotFound, errs.MovieNotFound)
 		} else {
-			utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+			utils.RespondWithErrorJSON(w, status.InternalServerError, errs.InternalServerError)
 		}
 		return
 	}
@@ -194,17 +194,17 @@ func (h *MovieHandler) DeleteMovie(w http.ResponseWriter, r *http.Request) {
 	objectID, err := primitive.ObjectIDFromHex(movieID)
 	if err != nil {
 		slog.Error("Invalid movie ID: ", utils.Err(err))
-		utils.RespondWithErrorJSON(w, status.BadRequest, error.InvalidMovieID)
+		utils.RespondWithErrorJSON(w, status.BadRequest, errs.InvalidMovieID)
 		return
 	}
 
 	err = h.MovieService.DeleteMovie(objectID)
 	if err != nil {
 		if err.Error() == "movie not found" {
-			utils.RespondWithErrorJSON(w, status.NotFound, error.MovieNotFound)
+			utils.RespondWithErrorJSON(w, status.NotFound, errs.MovieNotFound)
 		} else {
 			slog.Error("Error deleting movie:", utils.Err(err))
-			utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+			utils.RespondWithErrorJSON(w, status.InternalServerError, errs.InternalServerError)
 		}
 		return
 	}
@@ -225,7 +225,7 @@ func (h *MovieHandler) SearchMoviesHandler(w http.ResponseWriter, r *http.Reques
 	if pageStr != "" {
 		pageNum, err := strconv.Atoi(pageStr)
 		if err != nil || pageNum < 1 {
-			utils.RespondWithErrorJSON(w, status.BadRequest, error.InvalidRequestFormat)
+			utils.RespondWithErrorJSON(w, status.BadRequest, errs.InvalidRequestFormat)
 			return
 		}
 		page = pageNum
@@ -234,7 +234,7 @@ func (h *MovieHandler) SearchMoviesHandler(w http.ResponseWriter, r *http.Reques
 	totalMovies, err := h.MovieService.GetTotalMoviesCount()
 	if err != nil {
 		slog.Error("Error getting total movies count: ", utils.Err(err))
-		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		utils.RespondWithErrorJSON(w, status.InternalServerError, errs.InternalServerError)
 		return
 	}
 
@@ -245,7 +245,7 @@ func (h *MovieHandler) SearchMoviesHandler(w http.ResponseWriter, r *http.Reques
 	movies, err := h.MovieService.SearchMovies(query, page, pageSize)
 	if err != nil {
 		slog.Error("Error searching movies: ", utils.Err(err))
-		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		utils.RespondWithErrorJSON(w, status.InternalServerError, errs.InternalServerError)
 		return
 	}
 
@@ -302,7 +302,7 @@ func (h *MovieHandler) FilterMoviesByTagsHandler(w http.ResponseWriter, r *http.
 	if pageStr != "" {
 		pageNum, err := strconv.Atoi(pageStr)
 		if err != nil || pageNum < 1 {
-			utils.RespondWithErrorJSON(w, status.BadRequest, error.InvalidRequestFormat)
+			utils.RespondWithErrorJSON(w, status.BadRequest, errs.InvalidRequestFormat)
 			return
 		}
 		page = pageNum
@@ -311,21 +311,21 @@ func (h *MovieHandler) FilterMoviesByTagsHandler(w http.ResponseWriter, r *http.
 	totalMovies, err := h.MovieService.GetTotalMoviesCount()
 	if err != nil {
 		slog.Error("Error getting total movies count: ", utils.Err(err))
-		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		utils.RespondWithErrorJSON(w, status.InternalServerError, errs.InternalServerError)
 		return
 	}
 
 	totalPages := int(math.Ceil(float64(totalMovies) / float64(pageSize)))
 
 	if len(queryTags) == 0 {
-		utils.RespondWithErrorJSON(w, status.BadRequest, error.MissingTags)
+		utils.RespondWithErrorJSON(w, status.BadRequest, errs.MissingTags)
 		return
 	}
 
 	movies, err := h.MovieService.FilterMoviesByTags(queryTags, page, pageSize)
 	if err != nil {
 		slog.Error("Error filtering movies by tags: ", utils.Err(err))
-		utils.RespondWithErrorJSON(w, status.InternalServerError, error.InternalServerError)
+		utils.RespondWithErrorJSON(w, status.InternalServerError, errs.InternalServerError)
 		return
 	}
 
