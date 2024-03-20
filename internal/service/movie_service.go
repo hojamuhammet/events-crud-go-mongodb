@@ -2,7 +2,7 @@ package service
 
 import (
 	"events/internal/domain"
-	"events/internal/repository"
+	repository "events/internal/repository/interfaces"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )

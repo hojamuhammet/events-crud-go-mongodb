@@ -2,16 +2,16 @@ package service
 
 import (
 	"events/internal/domain"
-	repository "events/internal/repository/mongodb"
+	repository "events/internal/repository/interfaces"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type TheatreService struct {
-	TheatreService repository.MongoDBTheatreRepository
+	TheatreService repository.TheatreRepository
 }
 
-func NewTheatreService(theatreRepository repository.MongoDBTheatreRepository) *TheatreService {
+func NewTheatreService(theatreRepository repository.TheatreRepository) *TheatreService {
 	return &TheatreService{TheatreService: theatreRepository}
 }
 

@@ -51,7 +51,7 @@ func main() {
 
 	theatreCollection := database.GetDB().Collection("theatre")
 	theatreRepository := repository.NewMongoDBTheatreRepository(theatreCollection)
-	theatreService := service.NewTheatreService(*theatreRepository) // SOLVE THIS PROBLEM WITH POINTER
+	theatreService := service.NewTheatreService(theatreRepository) // SOLVE THIS PROBLEM WITH POINTER
 	routes.SetupTheatreRouter(theatreRouter, theatreService)
 
 	stop := make(chan os.Signal, 1)
