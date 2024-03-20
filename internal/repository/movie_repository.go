@@ -6,6 +6,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+//go:generate mockgen -source=movie_repository.go -destination=mocks/movie_repository_mock.go
+
 type MovieRepository interface {
 	GetAllMovies(page, pageSize int) ([]*domain.GetMovieResponse, error)
 	GetTotalMoviesCount() (int, error)

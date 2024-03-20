@@ -6,10 +6,12 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
+//go:generate mockgen -source=theatre_repository.go -destination=mocks/theatre_repository_mock.go
+
 type TheatreRepository interface {
 	GetAllPerformances(page, pageSize int) ([]*domain.GetPerformanceResponse, error)
 	GetTotalPerformancesCount() (int, error)
-	GetPerformance(id primitive.ObjectID) (*domain.GetPerformanceResponse, error)
+	GetPerformanceByID(id primitive.ObjectID) (*domain.GetPerformanceResponse, error)
 	CreatePerformance(request *domain.CreatePerformanceRequest) (*domain.CreatePerformanceResponse, error)
 	UpdatePerformance(id primitive.ObjectID, request *domain.UpdatePerformanceRequest) (*domain.UpdatePerformanceResponse, error)
 	DeletePerformance(id primitive.ObjectID) error
