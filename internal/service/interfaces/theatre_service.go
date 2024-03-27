@@ -8,7 +8,7 @@ import (
 
 //go:generate mockgen -source=theatre_service.go -destination=mocks/theatre_service_mock.go
 
-type TheatreRepository interface {
+type TheatreService interface {
 	GetAllPerformances(page, pageSize int) ([]*domain.GetPerformanceResponse, error)
 	GetTotalPerformancesCount() (int, error)
 	GetPerformanceByID(id primitive.ObjectID) (*domain.GetPerformanceResponse, error)
