@@ -12,31 +12,31 @@ import (
 	primitive "go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// MockMovieRepository is a mock of MovieRepository interface.
-type MockMovieRepository struct {
+// MockMovieService is a mock of MovieService interface.
+type MockMovieService struct {
 	ctrl     *gomock.Controller
-	recorder *MockMovieRepositoryMockRecorder
+	recorder *MockMovieServiceMockRecorder
 }
 
-// MockMovieRepositoryMockRecorder is the mock recorder for MockMovieRepository.
-type MockMovieRepositoryMockRecorder struct {
-	mock *MockMovieRepository
+// MockMovieServiceMockRecorder is the mock recorder for MockMovieService.
+type MockMovieServiceMockRecorder struct {
+	mock *MockMovieService
 }
 
-// NewMockMovieRepository creates a new mock instance.
-func NewMockMovieRepository(ctrl *gomock.Controller) *MockMovieRepository {
-	mock := &MockMovieRepository{ctrl: ctrl}
-	mock.recorder = &MockMovieRepositoryMockRecorder{mock}
+// NewMockMovieService creates a new mock instance.
+func NewMockMovieService(ctrl *gomock.Controller) *MockMovieService {
+	mock := &MockMovieService{ctrl: ctrl}
+	mock.recorder = &MockMovieServiceMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockMovieRepository) EXPECT() *MockMovieRepositoryMockRecorder {
+func (m *MockMovieService) EXPECT() *MockMovieServiceMockRecorder {
 	return m.recorder
 }
 
 // CreateMovie mocks base method.
-func (m *MockMovieRepository) CreateMovie(request *domain.CreateMovieRequest) (*domain.CreateMovieResponse, error) {
+func (m *MockMovieService) CreateMovie(request *domain.CreateMovieRequest) (*domain.CreateMovieResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateMovie", request)
 	ret0, _ := ret[0].(*domain.CreateMovieResponse)
@@ -45,13 +45,13 @@ func (m *MockMovieRepository) CreateMovie(request *domain.CreateMovieRequest) (*
 }
 
 // CreateMovie indicates an expected call of CreateMovie.
-func (mr *MockMovieRepositoryMockRecorder) CreateMovie(request interface{}) *gomock.Call {
+func (mr *MockMovieServiceMockRecorder) CreateMovie(request interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateMovie", reflect.TypeOf((*MockMovieRepository)(nil).CreateMovie), request)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateMovie", reflect.TypeOf((*MockMovieService)(nil).CreateMovie), request)
 }
 
 // DeleteMovie mocks base method.
-func (m *MockMovieRepository) DeleteMovie(id primitive.ObjectID) error {
+func (m *MockMovieService) DeleteMovie(id primitive.ObjectID) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeleteMovie", id)
 	ret0, _ := ret[0].(error)
@@ -59,13 +59,13 @@ func (m *MockMovieRepository) DeleteMovie(id primitive.ObjectID) error {
 }
 
 // DeleteMovie indicates an expected call of DeleteMovie.
-func (mr *MockMovieRepositoryMockRecorder) DeleteMovie(id interface{}) *gomock.Call {
+func (mr *MockMovieServiceMockRecorder) DeleteMovie(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteMovie", reflect.TypeOf((*MockMovieRepository)(nil).DeleteMovie), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteMovie", reflect.TypeOf((*MockMovieService)(nil).DeleteMovie), id)
 }
 
 // FilterMoviesByTags mocks base method.
-func (m *MockMovieRepository) FilterMoviesByTags(tags []string, page, pageSize int) ([]*domain.GetMovieResponse, error) {
+func (m *MockMovieService) FilterMoviesByTags(tags []string, page, pageSize int) ([]*domain.GetMovieResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FilterMoviesByTags", tags, page, pageSize)
 	ret0, _ := ret[0].([]*domain.GetMovieResponse)
@@ -74,13 +74,13 @@ func (m *MockMovieRepository) FilterMoviesByTags(tags []string, page, pageSize i
 }
 
 // FilterMoviesByTags indicates an expected call of FilterMoviesByTags.
-func (mr *MockMovieRepositoryMockRecorder) FilterMoviesByTags(tags, page, pageSize interface{}) *gomock.Call {
+func (mr *MockMovieServiceMockRecorder) FilterMoviesByTags(tags, page, pageSize interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FilterMoviesByTags", reflect.TypeOf((*MockMovieRepository)(nil).FilterMoviesByTags), tags, page, pageSize)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FilterMoviesByTags", reflect.TypeOf((*MockMovieService)(nil).FilterMoviesByTags), tags, page, pageSize)
 }
 
 // GetAllMovies mocks base method.
-func (m *MockMovieRepository) GetAllMovies(page, pageSize int) ([]*domain.GetMovieResponse, error) {
+func (m *MockMovieService) GetAllMovies(page, pageSize int) ([]*domain.GetMovieResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAllMovies", page, pageSize)
 	ret0, _ := ret[0].([]*domain.GetMovieResponse)
@@ -89,13 +89,13 @@ func (m *MockMovieRepository) GetAllMovies(page, pageSize int) ([]*domain.GetMov
 }
 
 // GetAllMovies indicates an expected call of GetAllMovies.
-func (mr *MockMovieRepositoryMockRecorder) GetAllMovies(page, pageSize interface{}) *gomock.Call {
+func (mr *MockMovieServiceMockRecorder) GetAllMovies(page, pageSize interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllMovies", reflect.TypeOf((*MockMovieRepository)(nil).GetAllMovies), page, pageSize)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllMovies", reflect.TypeOf((*MockMovieService)(nil).GetAllMovies), page, pageSize)
 }
 
 // GetMovieByID mocks base method.
-func (m *MockMovieRepository) GetMovieByID(id primitive.ObjectID) (*domain.GetMovieResponse, error) {
+func (m *MockMovieService) GetMovieByID(id primitive.ObjectID) (*domain.GetMovieResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetMovieByID", id)
 	ret0, _ := ret[0].(*domain.GetMovieResponse)
@@ -104,13 +104,13 @@ func (m *MockMovieRepository) GetMovieByID(id primitive.ObjectID) (*domain.GetMo
 }
 
 // GetMovieByID indicates an expected call of GetMovieByID.
-func (mr *MockMovieRepositoryMockRecorder) GetMovieByID(id interface{}) *gomock.Call {
+func (mr *MockMovieServiceMockRecorder) GetMovieByID(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMovieByID", reflect.TypeOf((*MockMovieRepository)(nil).GetMovieByID), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMovieByID", reflect.TypeOf((*MockMovieService)(nil).GetMovieByID), id)
 }
 
 // GetTotalMoviesCount mocks base method.
-func (m *MockMovieRepository) GetTotalMoviesCount() (int, error) {
+func (m *MockMovieService) GetTotalMoviesCount() (int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetTotalMoviesCount")
 	ret0, _ := ret[0].(int)
@@ -119,13 +119,13 @@ func (m *MockMovieRepository) GetTotalMoviesCount() (int, error) {
 }
 
 // GetTotalMoviesCount indicates an expected call of GetTotalMoviesCount.
-func (mr *MockMovieRepositoryMockRecorder) GetTotalMoviesCount() *gomock.Call {
+func (mr *MockMovieServiceMockRecorder) GetTotalMoviesCount() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTotalMoviesCount", reflect.TypeOf((*MockMovieRepository)(nil).GetTotalMoviesCount))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTotalMoviesCount", reflect.TypeOf((*MockMovieService)(nil).GetTotalMoviesCount))
 }
 
 // SearchMovies mocks base method.
-func (m *MockMovieRepository) SearchMovies(query string, page, pageSize int) ([]*domain.GetMovieResponse, error) {
+func (m *MockMovieService) SearchMovies(query string, page, pageSize int) ([]*domain.GetMovieResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SearchMovies", query, page, pageSize)
 	ret0, _ := ret[0].([]*domain.GetMovieResponse)
@@ -134,13 +134,13 @@ func (m *MockMovieRepository) SearchMovies(query string, page, pageSize int) ([]
 }
 
 // SearchMovies indicates an expected call of SearchMovies.
-func (mr *MockMovieRepositoryMockRecorder) SearchMovies(query, page, pageSize interface{}) *gomock.Call {
+func (mr *MockMovieServiceMockRecorder) SearchMovies(query, page, pageSize interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchMovies", reflect.TypeOf((*MockMovieRepository)(nil).SearchMovies), query, page, pageSize)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchMovies", reflect.TypeOf((*MockMovieService)(nil).SearchMovies), query, page, pageSize)
 }
 
 // UpdateMovie mocks base method.
-func (m *MockMovieRepository) UpdateMovie(id primitive.ObjectID, request *domain.UpdateMovieRequest) (*domain.UpdateMovieResponse, error) {
+func (m *MockMovieService) UpdateMovie(id primitive.ObjectID, request *domain.UpdateMovieRequest) (*domain.UpdateMovieResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateMovie", id, request)
 	ret0, _ := ret[0].(*domain.UpdateMovieResponse)
@@ -149,7 +149,7 @@ func (m *MockMovieRepository) UpdateMovie(id primitive.ObjectID, request *domain
 }
 
 // UpdateMovie indicates an expected call of UpdateMovie.
-func (mr *MockMovieRepositoryMockRecorder) UpdateMovie(id, request interface{}) *gomock.Call {
+func (mr *MockMovieServiceMockRecorder) UpdateMovie(id, request interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateMovie", reflect.TypeOf((*MockMovieRepository)(nil).UpdateMovie), id, request)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateMovie", reflect.TypeOf((*MockMovieService)(nil).UpdateMovie), id, request)
 }

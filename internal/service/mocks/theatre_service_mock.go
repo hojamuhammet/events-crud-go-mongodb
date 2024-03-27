@@ -12,46 +12,46 @@ import (
 	primitive "go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// MockTheatreRepository is a mock of TheatreRepository interface.
-type MockTheatreRepository struct {
+// MockTheatreService is a mock of TheatreService interface.
+type MockTheatreService struct {
 	ctrl     *gomock.Controller
-	recorder *MockTheatreRepositoryMockRecorder
+	recorder *MockTheatreServiceMockRecorder
 }
 
-// MockTheatreRepositoryMockRecorder is the mock recorder for MockTheatreRepository.
-type MockTheatreRepositoryMockRecorder struct {
-	mock *MockTheatreRepository
+// MockTheatreServiceMockRecorder is the mock recorder for MockTheatreService.
+type MockTheatreServiceMockRecorder struct {
+	mock *MockTheatreService
 }
 
-// NewMockTheatreRepository creates a new mock instance.
-func NewMockTheatreRepository(ctrl *gomock.Controller) *MockTheatreRepository {
-	mock := &MockTheatreRepository{ctrl: ctrl}
-	mock.recorder = &MockTheatreRepositoryMockRecorder{mock}
+// NewMockTheatreService creates a new mock instance.
+func NewMockTheatreService(ctrl *gomock.Controller) *MockTheatreService {
+	mock := &MockTheatreService{ctrl: ctrl}
+	mock.recorder = &MockTheatreServiceMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockTheatreRepository) EXPECT() *MockTheatreRepositoryMockRecorder {
+func (m *MockTheatreService) EXPECT() *MockTheatreServiceMockRecorder {
 	return m.recorder
 }
 
-// CreatePerformance mocks base method.
-func (m *MockTheatreRepository) CreatePerformance(request *domain.CreatePerformanceRequest) (*domain.CreatePerformanceResponse, error) {
+// CreajtePerformance mocks base method.
+func (m *MockTheatreService) CreajtePerformance(request *domain.CreatePerformanceRequest) (*domain.CreatePerformanceResponse, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "CreatePerformance", request)
+	ret := m.ctrl.Call(m, "CreajtePerformance", request)
 	ret0, _ := ret[0].(*domain.CreatePerformanceResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// CreatePerformance indicates an expected call of CreatePerformance.
-func (mr *MockTheatreRepositoryMockRecorder) CreatePerformance(request interface{}) *gomock.Call {
+// CreajtePerformance indicates an expected call of CreajtePerformance.
+func (mr *MockTheatreServiceMockRecorder) CreajtePerformance(request interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreatePerformance", reflect.TypeOf((*MockTheatreRepository)(nil).CreatePerformance), request)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreajtePerformance", reflect.TypeOf((*MockTheatreService)(nil).CreajtePerformance), request)
 }
 
 // DeletePerformance mocks base method.
-func (m *MockTheatreRepository) DeletePerformance(id primitive.ObjectID) error {
+func (m *MockTheatreService) DeletePerformance(id primitive.ObjectID) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DeletePerformance", id)
 	ret0, _ := ret[0].(error)
@@ -59,13 +59,13 @@ func (m *MockTheatreRepository) DeletePerformance(id primitive.ObjectID) error {
 }
 
 // DeletePerformance indicates an expected call of DeletePerformance.
-func (mr *MockTheatreRepositoryMockRecorder) DeletePerformance(id interface{}) *gomock.Call {
+func (mr *MockTheatreServiceMockRecorder) DeletePerformance(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeletePerformance", reflect.TypeOf((*MockTheatreRepository)(nil).DeletePerformance), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeletePerformance", reflect.TypeOf((*MockTheatreService)(nil).DeletePerformance), id)
 }
 
 // FilterPerformancesByTags mocks base method.
-func (m *MockTheatreRepository) FilterPerformancesByTags(tags []string, page, pageSize int) ([]*domain.GetPerformanceResponse, error) {
+func (m *MockTheatreService) FilterPerformancesByTags(tags []string, page, pageSize int) ([]*domain.GetPerformanceResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FilterPerformancesByTags", tags, page, pageSize)
 	ret0, _ := ret[0].([]*domain.GetPerformanceResponse)
@@ -74,13 +74,13 @@ func (m *MockTheatreRepository) FilterPerformancesByTags(tags []string, page, pa
 }
 
 // FilterPerformancesByTags indicates an expected call of FilterPerformancesByTags.
-func (mr *MockTheatreRepositoryMockRecorder) FilterPerformancesByTags(tags, page, pageSize interface{}) *gomock.Call {
+func (mr *MockTheatreServiceMockRecorder) FilterPerformancesByTags(tags, page, pageSize interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FilterPerformancesByTags", reflect.TypeOf((*MockTheatreRepository)(nil).FilterPerformancesByTags), tags, page, pageSize)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FilterPerformancesByTags", reflect.TypeOf((*MockTheatreService)(nil).FilterPerformancesByTags), tags, page, pageSize)
 }
 
 // GetAllPerformances mocks base method.
-func (m *MockTheatreRepository) GetAllPerformances(page, pageSize int) ([]*domain.GetPerformanceResponse, error) {
+func (m *MockTheatreService) GetAllPerformances(page, pageSize int) ([]*domain.GetPerformanceResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAllPerformances", page, pageSize)
 	ret0, _ := ret[0].([]*domain.GetPerformanceResponse)
@@ -89,13 +89,13 @@ func (m *MockTheatreRepository) GetAllPerformances(page, pageSize int) ([]*domai
 }
 
 // GetAllPerformances indicates an expected call of GetAllPerformances.
-func (mr *MockTheatreRepositoryMockRecorder) GetAllPerformances(page, pageSize interface{}) *gomock.Call {
+func (mr *MockTheatreServiceMockRecorder) GetAllPerformances(page, pageSize interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllPerformances", reflect.TypeOf((*MockTheatreRepository)(nil).GetAllPerformances), page, pageSize)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllPerformances", reflect.TypeOf((*MockTheatreService)(nil).GetAllPerformances), page, pageSize)
 }
 
 // GetPerformanceByID mocks base method.
-func (m *MockTheatreRepository) GetPerformanceByID(id primitive.ObjectID) (*domain.GetPerformanceResponse, error) {
+func (m *MockTheatreService) GetPerformanceByID(id primitive.ObjectID) (*domain.GetPerformanceResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetPerformanceByID", id)
 	ret0, _ := ret[0].(*domain.GetPerformanceResponse)
@@ -104,13 +104,13 @@ func (m *MockTheatreRepository) GetPerformanceByID(id primitive.ObjectID) (*doma
 }
 
 // GetPerformanceByID indicates an expected call of GetPerformanceByID.
-func (mr *MockTheatreRepositoryMockRecorder) GetPerformanceByID(id interface{}) *gomock.Call {
+func (mr *MockTheatreServiceMockRecorder) GetPerformanceByID(id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPerformanceByID", reflect.TypeOf((*MockTheatreRepository)(nil).GetPerformanceByID), id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPerformanceByID", reflect.TypeOf((*MockTheatreService)(nil).GetPerformanceByID), id)
 }
 
 // GetTotalPerformancesCount mocks base method.
-func (m *MockTheatreRepository) GetTotalPerformancesCount() (int, error) {
+func (m *MockTheatreService) GetTotalPerformancesCount() (int, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetTotalPerformancesCount")
 	ret0, _ := ret[0].(int)
@@ -119,13 +119,13 @@ func (m *MockTheatreRepository) GetTotalPerformancesCount() (int, error) {
 }
 
 // GetTotalPerformancesCount indicates an expected call of GetTotalPerformancesCount.
-func (mr *MockTheatreRepositoryMockRecorder) GetTotalPerformancesCount() *gomock.Call {
+func (mr *MockTheatreServiceMockRecorder) GetTotalPerformancesCount() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTotalPerformancesCount", reflect.TypeOf((*MockTheatreRepository)(nil).GetTotalPerformancesCount))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTotalPerformancesCount", reflect.TypeOf((*MockTheatreService)(nil).GetTotalPerformancesCount))
 }
 
 // SearchPerformances mocks base method.
-func (m *MockTheatreRepository) SearchPerformances(query string, page, pageSize int) ([]*domain.GetPerformanceResponse, error) {
+func (m *MockTheatreService) SearchPerformances(query string, page, pageSize int) ([]*domain.GetPerformanceResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "SearchPerformances", query, page, pageSize)
 	ret0, _ := ret[0].([]*domain.GetPerformanceResponse)
@@ -134,13 +134,13 @@ func (m *MockTheatreRepository) SearchPerformances(query string, page, pageSize 
 }
 
 // SearchPerformances indicates an expected call of SearchPerformances.
-func (mr *MockTheatreRepositoryMockRecorder) SearchPerformances(query, page, pageSize interface{}) *gomock.Call {
+func (mr *MockTheatreServiceMockRecorder) SearchPerformances(query, page, pageSize interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchPerformances", reflect.TypeOf((*MockTheatreRepository)(nil).SearchPerformances), query, page, pageSize)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchPerformances", reflect.TypeOf((*MockTheatreService)(nil).SearchPerformances), query, page, pageSize)
 }
 
 // UpdatePerformance mocks base method.
-func (m *MockTheatreRepository) UpdatePerformance(id primitive.ObjectID, request *domain.UpdatePerformanceRequest) (*domain.UpdatePerformanceResponse, error) {
+func (m *MockTheatreService) UpdatePerformance(id primitive.ObjectID, request *domain.UpdatePerformanceRequest) (*domain.UpdatePerformanceResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdatePerformance", id, request)
 	ret0, _ := ret[0].(*domain.UpdatePerformanceResponse)
@@ -149,7 +149,7 @@ func (m *MockTheatreRepository) UpdatePerformance(id primitive.ObjectID, request
 }
 
 // UpdatePerformance indicates an expected call of UpdatePerformance.
-func (mr *MockTheatreRepositoryMockRecorder) UpdatePerformance(id, request interface{}) *gomock.Call {
+func (mr *MockTheatreServiceMockRecorder) UpdatePerformance(id, request interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePerformance", reflect.TypeOf((*MockTheatreRepository)(nil).UpdatePerformance), id, request)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdatePerformance", reflect.TypeOf((*MockTheatreService)(nil).UpdatePerformance), id, request)
 }
