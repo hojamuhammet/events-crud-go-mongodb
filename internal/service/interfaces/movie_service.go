@@ -8,7 +8,7 @@ import (
 
 //go:generate mockgen -source=movie_service.go -destination=mocks/movie_service_mock.go
 
-type MovieRepository interface {
+type MovieService interface {
 	GetAllMovies(page, pageSize int) ([]*domain.GetMovieResponse, error)
 	GetTotalMoviesCount() (int, error)
 	GetMovieByID(id primitive.ObjectID) (*domain.GetMovieResponse, error)
