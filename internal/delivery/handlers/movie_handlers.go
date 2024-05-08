@@ -3,7 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"events/internal/domain"
-	"events/internal/service"
+	service "events/internal/service/interfaces"
 	"events/pkg/lib/errs"
 	"events/pkg/lib/status"
 	"events/pkg/lib/utils"
@@ -18,7 +18,7 @@ import (
 )
 
 type MovieHandler struct {
-	MovieService *service.MovieService
+	MovieService service.MovieService
 	Router       *chi.Mux
 }
 
@@ -188,7 +188,7 @@ func (h *MovieHandler) UpdateMovieHandler(w http.ResponseWriter, r *http.Request
 	utils.RespondWithJSON(w, status.OK, movie)
 }
 
-func (h *MovieHandler) DeleteMovie(w http.ResponseWriter, r *http.Request) {
+func (h *MovieHandler) DeleteMovieHandler(w http.ResponseWriter, r *http.Request) {
 	movieID := chi.URLParam(r, "id")
 
 	objectID, err := primitive.ObjectIDFromHex(movieID)
